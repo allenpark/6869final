@@ -2,5 +2,6 @@
 % between the two positions
 function [weight] = edge_weight(p1, p2, im)
 %%
-% TODO: implement
-weight = im(p1) - im(p2);
+val1 = pixel(p1, im);
+val2 = pixel(p2, im);
+weight = abs(val1 - val2);
