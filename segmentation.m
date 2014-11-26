@@ -3,7 +3,7 @@ function [seg]=segmentation(im)
 %%
 % 0. Sort E into pi=(o_1, ..., o_m) by non-decreasing edge weight.
 unsorted_graph = init_graph(im);
-graph = sort(unsorted_graph, 'descend');
+edges = sort(unsorted_graph, 'descend');
 
 %%
 % 1. Start with a segmentation S_0, where each vertex v_i is in its own 
@@ -20,10 +20,11 @@ end
 
 %%
 % 2. Repeat step 3 for q = 1, . . . , m.
-
-%%
 % 3. Run seg_step on S^(q-1) to generate S^q.
+for q = 1:length(edges)
+    seg = seg_step(seg, edge, im);
+end
 
 %%
 % 4. Return S = S^m.
-
+vis_seg(seg);
