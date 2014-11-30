@@ -1,4 +1,5 @@
 % Given component c and image im, computes the threshold function of c.
-function [t] = thres(c, im)
+function [t] = thres(c, seg, im)
 %%
-% TODO: Implement
+comp_nodes = seg{c, 1};
+t = 100 / length(comp_nodes);
