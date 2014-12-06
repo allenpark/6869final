@@ -12,4 +12,15 @@ for i = 1:segsz(1)
     end
 end
 colormap = rand(segsz(1), 3);
-imshow(indim, colormap);
+rgb = im2double(ind2rgb(indim, colormap));
+blended = repmat(im2double(im), 1, 1, 3) .* rgb;
+
+% figure;
+% subplot(1, 2, 1);
+% subimage(im);
+% subplot(1, 2, 2);
+% subimage(indim, colormap);
+% subplot(1, 3, 3);
+% subimage(blended);
+figure;
+imshow(imresize(blended, [512 512]));
