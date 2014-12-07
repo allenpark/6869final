@@ -2,4 +2,4 @@
 function [t] = thres(c, seg, im)
 %%
 comp_nodes = seg{c, 1};
-t = 250 / length(comp_nodes);
+t = 500 / length(comp_nodes);

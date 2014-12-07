@@ -1,5 +1,12 @@
 % Takes an image im and returns a list of the segments
-function [seg]=segmentation(im)
+function [seg, compmap]=segmentation(im, channel, displaying)
+%%
+if nargin <= 2
+    displaying = true;
+end
+G = fspecial('gaussian', [5 5], 0.8);
+im = imfilter(im, G, 'same');
+
 %%
 % 0. Sort E into pi=(o_1, ..., o_m) by non-decreasing edge weight.
 tic
@@ -15,13 +22,15 @@ tic
 sz = size(im);
 m = sz(1);
 n = sz(2);
+compmap = 1:m*n;
 seg = cell(m*n, 2);
 for i = 1:m
     for j = 1:n
         new_comp = cell(1, 2);
         new_comp{1} = sub2ind(sz, i, j);
         new_comp{2} = 0;
-        seg(sub2ind(sz, i, j), :) = new_comp;
+        ind = sub2ind(sz, i, j);
+        seg(ind, :) = new_comp;
     end
 end
 toc
@@ -31,14 +40,17 @@ toc
 % 3. Run seg_step on S^(q-1) to generate S^q.
 tic
 for q = 1:length(edges)
-    fprintf('Starting q=%d out of %d %d\n', q, length(edges), size(seg));
+    fprintf('Starting q=%d out of %d for channel %d\n', q, length(edges), channel);
     e = edges(q, :);
-    seg = seg_step(seg, e, im);
+    [seg, compmap] = seg_step(seg, compmap, e, im);
 end
+seg = reduce_seg(seg);
 toc
 
 %%
 % 4. Return S = S^m.
-tic
-vis_seg(seg, im);
-toc
+if displaying
+    tic
+    vis_seg(seg, im);
+    toc
+end
