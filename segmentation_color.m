@@ -8,6 +8,16 @@ elseif nargin <= 2
 end
 if usefeaturespace
     [~, compmap] = segmentation(colorim, 0, displaying);
+    colors = rand(size(compmap, 2), 3);
+    sz = size(colorim);
+    rgbim = im2double(ind2rgb(reshape(compmap, [sz(1) sz(2)]), colors));
+    figure;
+    imshow(imresize(rgbim, [512 512]));
+    figure;
+    origim = im2double(rgb2gray(colorim));
+    imshow(imresize(repmat(origim, 1, 1, 3) .* rgbim, [512 512]));
+    figure;
+    imshow(imresize(colorim, [512 512]));
     return
 end
 %%
