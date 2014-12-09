@@ -1,7 +1,14 @@
 % Takes a color image im and returns a segmentation
-function [compmap]=segmentation_color(colorim, displaying)
+function [compmap]=segmentation_color(colorim, usefeaturespace, displaying)
 if nargin <= 1
+    usefeaturespace = true;
+    displaying = true;
+elseif nargin <= 2
     displaying = false;
+end
+if usefeaturespace
+    [~, compmap] = segmentation(colorim, 0, displaying);
+    return
 end
 %%
 tic

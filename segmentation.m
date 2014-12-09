@@ -1,6 +1,9 @@
 % Takes an image im and returns a list of the segments
 function [seg, compmap]=segmentation(im, channel, displaying)
 %%
+if nargin <= 1
+    channel = 0;
+end
 if nargin <= 2
     displaying = true;
 end

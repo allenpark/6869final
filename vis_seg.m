@@ -13,7 +13,11 @@ for i = 1:segsz(1)
 end
 colormap = rand(segsz(1), 3);
 rgbim = im2double(ind2rgb(indim, colormap));
-blended = repmat(im2double(im), 1, 1, 3) .* rgbim;
+if size(im, 3) == 1
+    blended = repmat(im2double(im), 1, 1, 3) .* rgbim;
+else
+    blended = im2double(im) .* rgbim;
+end
 
 % figure;
 % subplot(1, 2, 1);
