@@ -43,7 +43,7 @@ toc
 % 2. Repeat step 3 for q = 1, . . . , m.
 % 3. Run seg_step on S^(q-1) to generate S^q.
 tic
-numstatsrecorded = 8;
+numstatsrecorded = 9;
 stats = zeros(length(edges), numstatsrecorded);
 for q = 1:length(edges)
     fprintf('Starting q=%d out of %d for channel %d\n', q, length(edges), channel);
@@ -105,7 +105,14 @@ a = axis; linehelp = [max(a(1), a(3)) min(a(2), a(4))]; line(linehelp, linehelp)
 figure; scatter(nmstats(:, 3), nmstats(:, 4));
 a = axis; linehelp = [max(a(1), a(3)) min(a(2), a(4))]; line(linehelp, linehelp); title('Not merged stats (w/mint)');
 %%
-s = seg{101, 1};
+for i=1:length(reduced_seg)
+    s = reduced_seg{i, 1};
+    if size(s, 2) > 2000
+        fprintf('Seg %d with size %d\n', i, size(s, 2));
+    end
+end    
+%%
+s = reduced_seg{178, 1};
 x = zeros(size(im), 'uint8');
 for i=1:length(s)
     [a, b] = ind2sub(size(x), s(i));
@@ -113,7 +120,26 @@ for i=1:length(s)
 end
 figure; subplot(1, 2, 1); imshow(x); subplot(1, 2, 2); imshow(im);
 %%
-s = seg{101, 1};
+s = reduced_seg{178, 1};
+compcount = 1;
+compstats = double.empty(0, numstatsrecorded);
+for i=1:length(rstats)
+    if any(rstats(i, 1) == s) || any(rstats(i, 2) == s)
+        % vi or vj is in rstats
+        n = 4;
+        if true||rstats(i, 4) >= 0.7 / n && rstats(i, 4) < 0.7 / (n-1)
+            compstats(compcount, :) = rstats(i, :);
+            compcount = compcount + 1;
+        end
+    end
+end
+figure; scatter(compstats(:, 3), compstats(:, 4));
+a = axis; linehelp = [max(a(1), a(3)) min(a(2), a(4))]; line(linehelp, linehelp); title('Component stats (w/mint)');
+for i=1:10
+    line(linehelp, linehelp+0.7/i);
+end
+%%
+s = reduced_seg{178, 1};
 compcount = 1;
 compstats = double.empty(0, numstatsrecorded);
 for i=1:length(rstats)
